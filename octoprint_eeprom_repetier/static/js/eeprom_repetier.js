@@ -67,8 +67,7 @@ $(function() {
         };
 
         self.onEventConnected = function() {
-            if (self.isConnected() && !self.isRepetierFirmware())
-                self._requestFirmwareInfo();
+            self._requestFirmwareInfo();
         }
 
         self.onEventDisconnected = function() {
