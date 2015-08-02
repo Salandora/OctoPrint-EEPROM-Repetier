@@ -11,7 +11,7 @@ $(function() {
         self.firmwareRegEx = /FIRMWARE_NAME:([^\s]+)/i;
         self.repetierRegEx = /Repetier_([^\s]*)/i;
 
-        self.eepromDataRegEx = /EPR:(\d+) (\d+) ([^\s]+) ([^\n]+)/g;
+        self.eepromDataRegEx = /EPR:(\d+) (\d+) ([^\s]+) (.+)/;
 
         self.isRepetierFirmware = ko.observable(false);
 
