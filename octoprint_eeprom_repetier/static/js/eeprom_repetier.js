@@ -89,6 +89,11 @@ $(function() {
             });
         };
 
+		self.resetEeprom = function () {
+			self.control.sendCustomCommand({ command: "M502"});
+			self.control.sendCustomCommand({ command: "M500"});
+		}
+
         self._requestFirmwareInfo = function() {
             self.control.sendCustomCommand({ command: "M115" });
         };

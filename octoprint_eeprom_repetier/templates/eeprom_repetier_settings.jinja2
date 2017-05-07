@@ -6,6 +6,7 @@ Your machine is <span style="color: red" data-bind="visible: isConnected() && !i
 <form class="form-horizontal">
     <button class="btn" data-bind="enabled: isRepetierFirmware, click: loadEeprom">{{ _('Load EEprom') }}</button>
     <button class="btn" data-bind="enabled: isRepetierFirmware, click: saveEeprom">{{ _('Save EEprom') }}</button>
+    <button class="btn" data-bind="enabled: isRepetierFirmware, click: resetEeprom">{{ _('Reset EEprom') }}</button>
 </form>
 
 <div data-bind="foreach: eepromData">
