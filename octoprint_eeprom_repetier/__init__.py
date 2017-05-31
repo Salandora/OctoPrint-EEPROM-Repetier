@@ -25,7 +25,7 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
 
     def get_update_information(self):
         return dict(
-            systemcommandeditor=dict(
+            eeprom_repetier=dict(
                 displayName="EEPROM Repetier Editor Plugin",
                 displayVersion=self._plugin_version,
 

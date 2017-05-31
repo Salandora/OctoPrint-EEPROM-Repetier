@@ -64,10 +64,10 @@ $(function() {
                     }
 		    else if (line.includes("Info:Configuration stored to EEPROM")) {
 			self.showPopup("success", "Configuration stored to EEPROM.", "");
-		    } 
+		    }
 		    else if (line.includes("Info:Configuration reset to defaults")) {
 			self.showPopup("success", "Configuration reset to defaults.", "");
-		    } 
+		    }
                 });
             }
         };
@@ -87,30 +87,28 @@ $(function() {
 
         self.saveEeprom = function()  {
             var eepromData = self.eepromData();
-	    var changed = false;
+            var changed = false;
             _.each(eepromData, function(data) {
                 if (data.origValue != data.value) {
                     self._requestSaveDataToEeprom(data.dataType, data.position, data.value);
                     data.origValue = data.value;
-		    changed = changed ? changed : true;
+		            changed = true;
                 }
             });
-	    if (changed) {
-	        self.showPopup("success", "All changed values stored to EEPROM.", "");
-	    }
+            if (changed) {
+                self.showPopup("success", "All changed values stored to EEPROM.", "");
+            }
         };
 
-	self.resetEeprom = function () {
-		showConfirmationDialog({
-		    message: "Are you sure? Also remember to reset printer to take effect.",
-		    onproceed: function() {
-			self.control.sendCustomCommand({ command: "M502"});
-			self.control.sendCustomCommand({ command: "M500"});
-		      },
-		    oncancel: function() {
-		      }
-		});
-	}
+        self.resetEeprom = function () {
+            showConfirmationDialog({
+                message: "Are you sure? Also remember to reset printer to take effect.",
+                onproceed: function() {
+                    self.control.sendCustomCommand({ command: "M502"});
+                    self.control.sendCustomCommand({ command: "M500"});
+                },
+            });
+        }
 
         self._requestFirmwareInfo = function() {
             self.control.sendCustomCommand({ command: "M115" });
@@ -132,23 +130,23 @@ $(function() {
             }
         }
 
-	self.showPopup = function(message_type, title, text){
-	    if (self.popup !== undefined){
-	            self.closePopup();
-	    }
-	    self.popup = new PNotify({
-	            title: gettext(title),
-	            text: text,
-	            type: message_type,
-	            hide: false
-	    });
-	}
+        self.showPopup = function(message_type, title, text){
+            if (self.popup !== undefined){
+                    self.closePopup();
+            }
+            self.popup = new PNotify({
+                    title: gettext(title),
+                    text: text,
+                    type: message_type,
+                    hide: false
+            });
+        }
 
-	self.closePopup = function() {
-	    if (self.popup !== undefined) {
-		    self.popup.remove();
-	    }
-	};
+        self.closePopup = function() {
+            if (self.popup !== undefined) {
+                self.popup.remove();
+            }
+        };
     }
 
     OCTOPRINT_VIEWMODELS.push([
