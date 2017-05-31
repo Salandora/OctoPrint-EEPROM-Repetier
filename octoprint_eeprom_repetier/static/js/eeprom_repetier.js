@@ -62,6 +62,12 @@ $(function() {
                             description: match[4]
                         });
                     }
+		    else if (line.includes("Info:Configuration stored to EEPROM")) {
+			self.showPopup("success", "Configuration stored to EEPROM.", "");
+		    } 
+		    else if (line.includes("Info:Configuration reset to defaults")) {
+			self.showPopup("success", "Configuration reset to defaults.", "");
+		    } 
                 });
             }
         };
@@ -81,13 +87,30 @@ $(function() {
 
         self.saveEeprom = function()  {
             var eepromData = self.eepromData();
+	    var changed = false;
             _.each(eepromData, function(data) {
                 if (data.origValue != data.value) {
                     self._requestSaveDataToEeprom(data.dataType, data.position, data.value);
                     data.origValue = data.value;
+		    changed = changed ? changed : true;
                 }
             });
+	    if (changed) {
+	        self.showPopup("success", "All changed values stored to EEPROM.", "");
+	    }
         };
+
+	self.resetEeprom = function () {
+		showConfirmationDialog({
+		    message: "Are you sure? Also remember to reset printer to take effect.",
+		    onproceed: function() {
+			self.control.sendCustomCommand({ command: "M502"});
+			self.control.sendCustomCommand({ command: "M500"});
+		      },
+		    oncancel: function() {
+		      }
+		});
+	}
 
         self._requestFirmwareInfo = function() {
             self.control.sendCustomCommand({ command: "M115" });
@@ -96,6 +119,7 @@ $(function() {
         self._requestEepromData = function() {
             self.control.sendCustomCommand({ command: "M205" });
         }
+
         self._requestSaveDataToEeprom = function(data_type, position, value) {
             var cmd = "M206 T" + data_type + " P" + position;
             if (data_type == 3) {
@@ -107,6 +131,24 @@ $(function() {
                 self.control.sendCustomCommand({ command: cmd });
             }
         }
+
+	self.showPopup = function(message_type, title, text){
+	    if (self.popup !== undefined){
+	            self.closePopup();
+	    }
+	    self.popup = new PNotify({
+	            title: gettext(title),
+	            text: text,
+	            type: message_type,
+	            hide: false
+	    });
+	}
+
+	self.closePopup = function() {
+	    if (self.popup !== undefined) {
+		    self.popup.remove();
+	    }
+	};
     }
 
     OCTOPRINT_VIEWMODELS.push([
