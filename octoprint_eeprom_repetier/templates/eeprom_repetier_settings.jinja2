@@ -1,3 +1,4 @@
+<div style="height: 95%; overflow: hidden; display: block; position: absolute;">
 <h4>EEprom Repetier Plugin</h4>
 This plugin is designed to get, change and save the values in the Eeprom of your Repetier Firmware based Machine.<br>
 Your machine is <span style="color: red" data-bind="visible: isConnected() && !isRepetierFirmware()">not</span> Repetier Firmware based
@@ -9,7 +10,7 @@ Your machine is <span style="color: red" data-bind="visible: isConnected() && !i
     <button class="btn" data-bind="enabled: isRepetierFirmware, click: resetEeprom">{{ _('Reset EEprom') }}</button>
 </form>
 
-<div data-bind="foreach: eepromData">
+<div data-bind="foreach: eepromData" style="overflow: scroll; height: 70%;">
     <form class="form-horizontal">
         <div class="control-group">
             <label class="control-label" style="width: 300px" data-bind="text: description, attr: { 'for': position }"></label>
@@ -18,4 +19,5 @@ Your machine is <span style="color: red" data-bind="visible: isConnected() && !i
             </div>
         </div>
     </form>
+</div>
 </div>
