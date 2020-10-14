@@ -1,15 +1,18 @@
-<h4>EEprom Repetier Plugin</h4>
-This plugin is designed to get, change and save the values in the Eeprom of your Repetier Firmware based Machine.<br>
-Your machine is <span style="color: red" data-bind="visible: isConnected() && !isRepetierFirmware()">not</span> Repetier Firmware based
+<div style="height: 95%; overflow: hidden; display: block; position: absolute;">
+<h3>EEPROM Editor for Repetier</h3>
+This allows you to get, change and save the values in the EEPROM of your Repetier Firmware based Machine.<br>
+<span style data-bind="visible: !isConnected()">Your printer is <span style="color: red">not</span> connected.<br></span>
+<span style data-bind="visible: isConnected()">Your machine is <span style="color: red" data-bind="visible: !isRepetierFirmware()">not</span> Repetier Firmware based.
+</span>
 </>
 
-<form class="form-horizontal">
-    <button class="btn" data-bind="enabled: isRepetierFirmware, click: loadEeprom">{{ _('Load EEprom') }}</button>
-    <button class="btn" data-bind="enabled: isRepetierFirmware, click: saveEeprom">{{ _('Save EEprom') }}</button>
-    <button class="btn" data-bind="enabled: isRepetierFirmware, click: resetEeprom">{{ _('Reset EEprom') }}</button>
+<form class="form-horizontal" data-bind="visible: isConnected() && isRepetierFirmware()">
+    <button class="btn" title="Load the current EEPROM values" data-bind="enable: isRepetierFirmware(), click: loadEeprom">{{ _('Load EEPROM') }}</button>
+    <button class="btn" title="Save any changes back to the EEPROM" data-bind="enable: (isRepetierFirmware() && eepromData().length > 0), click: saveEeprom">{{ _('Save EEPROM') }}</button>
+    <button class="btn" title="Set the EEPROM values to the config defaults and activate them" data-bind="enable: isRepetierFirmware(), click: resetEeprom">{{ _('Reset EEPROM') }}</button>
 </form>
 
-<div data-bind="foreach: eepromData">
+<div data-bind="foreach: eepromData" style="overflow-y: auto; height: 70%;">
     <form class="form-horizontal">
         <div class="control-group">
             <label class="control-label" style="width: 300px" data-bind="text: description, attr: { 'for': position }"></label>
@@ -18,4 +21,5 @@ Your machine is <span style="color: red" data-bind="visible: isConnected() && !i
             </div>
         </div>
     </form>
+</div>
 </div>
