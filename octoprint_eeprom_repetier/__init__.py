@@ -1,5 +1,5 @@
 # coding=utf-8
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 
 ### (Don't forget to remove me)
 # This is a basic skeleton for your plugin's __init__.py. You probably want to adjust the class name of your plugin
@@ -10,6 +10,8 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import octoprint.server
+
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
                             octoprint.plugin.TemplatePlugin):
@@ -40,7 +42,7 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
             )
         )
 
-__plugin_name__ = "EEPROM Repetier Editor Plugin"
+__plugin_name__ = "EEPROM Editor - Repetier"
 
 def __plugin_load__():
     global __plugin_implementation__

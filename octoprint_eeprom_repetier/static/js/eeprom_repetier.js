@@ -62,12 +62,12 @@ $(function() {
                             description: match[4]
                         });
                     }
-		    else if (line.includes("Info:Configuration stored to EEPROM")) {
-			self.showPopup("success", "Configuration stored to EEPROM.", "");
-		    }
-		    else if (line.includes("Info:Configuration reset to defaults")) {
-			self.showPopup("success", "Configuration reset to defaults.", "");
-		    }
+		            else if (line.includes("Info:Configuration stored to EEPROM")) {
+			            self.showPopup("success", "Configuration stored to EEPROM.", "");
+		            }
+		            else if (line.includes("Info:Configuration reset to defaults")) {
+			            self.showPopup("success", "Configuration reset to defaults.", "");
+                    }
                 });
             }
         };
@@ -148,10 +148,18 @@ $(function() {
             }
         };
     }
-
+/* Old style viewmodel declaration - deprecated
     OCTOPRINT_VIEWMODELS.push([
         EepromRepetierViewModel,
         ["controlViewModel", "connectionViewModel"],
         "#settings_plugin_eeprom_repetier"
     ]);
+*/
+    OCTOPRINT_VIEWMODELS.push({
+        construct: EepromRepetierViewModel,
+        additionalNames: [],
+        dependencies: ["controlViewModel", "connectionViewModel"],
+        optional: [],
+        elements: ["#settings_plugin_eeprom_repetier"]
+    });
 });
