@@ -1,0 +1,28 @@
+<form class="form-horizontal" data-bind="visible: isConnected() && isRepetierFirmware()">
+    <button class="btn" title="Backup the current values" data-bind="enable: isRepetierFirmware(), click: backupCurrent">Create Backup</button>
+    Backup the displayed EEPROM values to a file. NOTE: this may include unsaved changes.
+</form>
+
+<h4>Existing backups</h4>
+<p>These are the backups of your EEPROM settings that already exist on this OctoPrint instance. You may delete, download or restore them.</p>
+
+<div style="overflow-y: auto; max-height: 280px;">
+    <table class="table table-condensed table-hover" id="settings_plugin_eeprom_repetier_backup_table">
+        <thead>
+        <tr>
+            <th class="settings_plugin_eeprom_repetier_name">Name</th>
+            <th class="settings_plugin_eeprom_repetier_actions">Action</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: backupFiles" >
+        <tr>
+            <td class="settings_plugin_eeprom_repetier_name" data-bind="text: name"></td>
+            <td class="settings_plugin_eeprom_repetier_actions">
+                <a href="javascript:void(0)" title="Delete" class="far fa-trash-alt" data-bind="click: function() { $parent.removeBackup($data.name) }"></a>&nbsp;|&nbsp;
+                <a href="javascript:void(0)" title="Download" class="fas fa-download" data-bind="attr: {href: url}"></a>&nbsp;|&nbsp;
+                <a href="javascript:void(0)" title="Restore" data-bind="click: function() { $parent.restoreBackup($data.name) }"><i class="fas fa-sync"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

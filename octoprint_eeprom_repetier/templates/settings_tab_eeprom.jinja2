@@ -1,0 +1,24 @@
+<p>This allows you to get, change and save the values in the EEPROM of your Repetier Firmware based Machine.<br>
+<span style data-bind="visible: !isConnected()">Your printer is <span style="color: red">not</span> connected.<br></span>
+<span style data-bind="visible: isConnected()">Your printer is <span style="color: red" data-bind="visible: !isRepetierFirmware()">not</span> Repetier Firmware based.<br>
+</span>
+</p>
+
+<form class="form-inline" data-bind="visible: isConnected() && isRepetierFirmware()">
+    <button class="btn" title="Load the current EEPROM values" data-bind="enable: isRepetierFirmware(), click: loadEeprom">Load EEPROM</button>
+    <button class="btn" title="Save any changes back to the EEPROM" data-bind="enable: (isRepetierFirmware() && eepromData().length > 0), click: saveEeprom">Save EEPROM</button>
+    <button class="btn" title="Set the EEPROM values to the config defaults and activate them" data-bind="enable: isRepetierFirmware(), click: resetEeprom">Reset EEPROM</button>
+    <label data-bind="visible: eepromData().length > 0"><input data-bind='checked: showOriginalValues' type='checkbox' /> Show original values</label> 
+</form>
+
+<div data-bind="foreach: eepromData" style="overflow-y: auto; max-height: 320px;">
+    <form class="form-horizontal">
+        <div class="control-group">
+            <label class="control-label" style="width: 300px" data-bind="text: description, attr: { 'for': position }"></label>
+            <div class="controls" style="margin-left: 320px; width: 30%" >
+                <input type="text" class="input-block-level" data-bind="value: value, attr: { 'id': position, 'title': origValue }">
+                <code style="color: black" data-bind="visible: $root.showOriginalValues, text: origValue"></code>
+            </div>
+        </div>
+    </form>
+</div>
