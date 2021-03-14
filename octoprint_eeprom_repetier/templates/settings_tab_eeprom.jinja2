@@ -23,10 +23,8 @@
         <tr>
             <td data-bind="text: description"></td>
             <td>
-                <form class="form-horizontal">
-                    <input type="text" class="input-block-level" data-bind="value: value, attr: { 'id': position, 'title': origValue }">
-                    <code data-bind="visible: $root.showOriginalValues, text: origValue"></code>
-                </form>
+                <input type="text" class="input-block-level" data-bind="value: value, attr: { 'id': position, 'title': origValue }">
+                <code data-bind="visible: $root.showOriginalValues, text: origValue"></code>
             </td>
         </tr>
         </tbody>
