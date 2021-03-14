@@ -134,6 +134,47 @@ $(function() {
             });
         };
 
+        self._requestFirmwareInfo = function() {
+            self.control.sendCustomCommand({ command: "M115" });
+        };
+
+        self._requestEepromData = function() {
+            if (self.isRepetierFirmware()) {
+                self.control.sendCustomCommand({ command: "M205" });
+            }
+        };
+
+        self._requestSaveDataToEeprom = function(data_type, position, value) {
+            var cmd = "M206 T" + data_type + " P" + position;
+            if (data_type == 3) {
+                cmd += " X" + value;
+                self.control.sendCustomCommand({ command: cmd });
+            }
+            else {
+                cmd += " S" + value;
+                self.control.sendCustomCommand({ command: cmd });
+            }
+        };
+
+        self.showPopup = function(message_type, title, text) {
+            if (self.popup !== undefined) {
+                self.closePopup();
+            }
+            self.popup = new PNotify({
+                title: gettext(title),
+                text: text,
+                type: message_type,
+                hide: false
+            });
+        };
+
+        self.closePopup = function() {
+            if (self.popup !== undefined) {
+                self.popup.remove();
+            }
+        };
+
+        // ======= Backup feature ========
         self.listBackups = function () {
 
             OctoPrint.get(self.pluginUrl+"list")
@@ -215,45 +256,6 @@ $(function() {
             });
         };
 
-        self._requestFirmwareInfo = function() {
-            self.control.sendCustomCommand({ command: "M115" });
-        };
-
-        self._requestEepromData = function() {
-            if (self.isRepetierFirmware()) {
-                self.control.sendCustomCommand({ command: "M205" });
-            }
-        };
-
-        self._requestSaveDataToEeprom = function(data_type, position, value) {
-            var cmd = "M206 T" + data_type + " P" + position;
-            if (data_type == 3) {
-                cmd += " X" + value;
-                self.control.sendCustomCommand({ command: cmd });
-            }
-            else {
-                cmd += " S" + value;
-                self.control.sendCustomCommand({ command: cmd });
-            }
-        };
-
-        self.showPopup = function(message_type, title, text) {
-            if (self.popup !== undefined) {
-                self.closePopup();
-            }
-            self.popup = new PNotify({
-                title: gettext(title),
-                text: text,
-                type: message_type,
-                hide: false
-            });
-        };
-
-        self.closePopup = function() {
-            if (self.popup !== undefined) {
-                self.popup.remove();
-            }
-        };
 
         // ============= START TESTING CODE ==========================
 
