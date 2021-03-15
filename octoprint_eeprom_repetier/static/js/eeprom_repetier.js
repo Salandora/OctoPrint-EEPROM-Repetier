@@ -104,9 +104,10 @@ $(function() {
 
         self.loadEeprom = function() {
             self.eepromData([]);
-            self._requestEepromData();
-            // Test
-            self.loadDummyData();
+            if (self.isConnected()) {
+                self._requestEepromData();
+                self.loadDummyData();  // For DEBUG
+            }
         };
 
         self.saveEeprom = function()  {

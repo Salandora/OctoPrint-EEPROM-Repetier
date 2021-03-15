@@ -18,9 +18,9 @@
         <tr>
             <td data-bind="text: name"></td>
             <td class="settings_plugin_eeprom_repetier_actions">
-                <a href="javascript:void(0)" title="Delete" class="far fa-trash-alt" data-bind="click: function() { $parent.removeBackup($data.name) }"></a>&nbsp;|&nbsp;
+                <a href="javascript:void(0)" title="Delete" class="far fa-trash-alt" data-bind="click: function() { $root.removeBackup($data.name) }"></a>&nbsp;|&nbsp;
                 <a href="javascript:void(0)" title="Download" class="fas fa-download" data-bind="attr: {href: url}"></a>&nbsp;|&nbsp;
-                <a href="javascript:void(0)" title="Restore" data-bind="click: function() { $parent.restoreBackup($data.name) }"><i class="fas fa-sync"></i></a>
+                <a href="javascript:void(0)" title="Restore" class="fas fa-sync" data-bind="visible: $root.isConnected(), click: function() { $root.restoreBackup($data.name) }"></a>
             </td>
         </tr>
         </tbody>
