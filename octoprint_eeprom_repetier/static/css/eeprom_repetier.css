@@ -1,7 +1,4 @@
-#settings_plugin_eeprom_repetier_eeprom_table thead th{position:sticky; top: 0; background: #777}
-#settings_plugin_eeprom_repetier_eeprom_table tbody td input{margin-bottom: 0px;}
-#settings_plugin_eeprom_repetier_eeprom_table tbody td code{color:#000}
-
-#settings_plugin_eeprom_repetier_backup_table thead th{position:sticky; top: 0; background: #777}
-#settings_plugin_eeprom_repetier_backup_table .settings_plugin_eeprom_repetier_actions {width:75px; text-align:center}
-#settings_plugin_eeprom_repetier_backup_table .settings_plugin_eeprom_repetier_actions a{color:#000}
+#settings_plugin_eeprom_repetier_table thead th{position:sticky; top: 0; background: #777}
+#settings_plugin_eeprom_repetier_table tbody td input{margin-bottom: 0px;}
+#settings_plugin_eeprom_repetier_table tbody td code{color:#000}
+#settings_plugin_eeprom_repetier_table .settings_plugin_eeprom_repetier_actions {width:75px; text-align:center}
