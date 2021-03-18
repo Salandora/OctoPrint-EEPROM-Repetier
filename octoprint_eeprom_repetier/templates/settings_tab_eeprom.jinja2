@@ -8,7 +8,7 @@
     <button class="btn" title="Load the current EEPROM values" data-bind="enable: isRepetierFirmware(), click: loadEeprom">Load EEPROM</button>
     <button class="btn" title="Save any changes back to the EEPROM" data-bind="enable: (isRepetierFirmware() && eepromData().length > 0), click: saveEeprom">Save EEPROM</button>
     <button class="btn" title="Set the EEPROM values to the config defaults and activate them" data-bind="enable: isRepetierFirmware(), click: resetEeprom">Reset EEPROM</button>
-    <label data-bind="visible: eepromData().length > 0"><input data-bind='checked: showOriginalValues' type='checkbox' /> Show stored values</label> 
+    <label data-bind="visible: eepromData().length > 0"><input data-bind="checked: showUnsavedValues" type="checkbox" /> Show unsaved changes</label> 
 </form>
 
 <div style="overflow-y: auto; max-height: 320px;">
@@ -23,8 +23,8 @@
         <tr>
             <td data-bind="text: description"></td>
             <td>
-                <input type="text" class="input-block-level" data-bind="value: value, attr: { 'id': position, 'title': origValue }">
-                <code data-bind="visible: $root.showOriginalValues, text: origValue"></code>
+                <input type="text" class="input-block-level" data-bind="value: value, attr: { 'id': position }">
+                <code data-bind="visible: $root.showUnsavedValues() && modified(), text: origValue" title="The value stored in EEPROM"></code>
             </td>
         </tr>
         </tbody>

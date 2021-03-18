@@ -23,7 +23,18 @@ $(function() {
                    self.connection.isReady() || self.connection.isPaused();
         });
 
-        self.showOriginalValues = ko.observable(false);
+        self.showUnsavedValues = ko.observable(false);
+
+        self.isModified = ko.computed(function() {
+            var result = false;
+            if (self.showUnsavedValues()) {
+                _.each(self.eepromData(), function(data) {
+                    data.modified(data.value != data.origValue);
+                    if (data.modified()) result = true;
+                });
+            }
+            return result;
+        });
 
         self.eepromData = ko.observableArray([]);
 
@@ -39,11 +50,6 @@ $(function() {
         self.fromHistoryData = function(data) {
             _.each(data.logs, function(line) {
                 self.checkRepetierFirmware(line);
-                // var match = self.firmwareRegEx.exec(line);
-                // if (match != null) {
-                //     if (self.repetierRegEx.exec(match[0]))
-                //         self.isRepetierFirmware(true);
-                // }
             });
         };
 
@@ -51,12 +57,6 @@ $(function() {
             if (!self.isRepetierFirmware()) {
                 _.each(data.logs, function (line) {
                     self.checkRepetierFirmware(line);
-
-                    // var match = self.firmwareRegEx.exec(line);
-                    // if (match) {
-                    //     if (self.repetierRegEx.exec(match[0]))
-                    //         self.isRepetierFirmware(true);
-                    // }
                 });
             }
             else
@@ -69,7 +69,8 @@ $(function() {
                             position: match[2],
                             origValue: match[3],
                             value: match[3],
-                            description: match[4]
+                            description: match[4],
+                            modified: ko.observable(false)
                         });
                     }
 		            else if (line.includes("Info:Configuration stored to EEPROM")) {
@@ -103,7 +104,8 @@ $(function() {
         };
 
         self.loadEeprom = function() {
-            self.eepromData([]);
+            //self.eepromData([]);
+            self.eepromData.removeAll();
             if (self.isConnected()) {
                 self._requestEepromData();
                 self.loadDummyData();  // For DEBUG
@@ -263,42 +265,43 @@ $(function() {
         // Inject dummy data into the EEPROM table for testing
         self.loadDummyData = function () {
             var dummyEepromData = [
-                {dataType: "S", position: 1, origValue: "45", value: "45", description: "A very long parameter description for Param 1"},
-                {dataType: "S", position: 2, origValue: "55", value: "25", description: "Param 2"},
-                {dataType: "S", position: 3, origValue: "65", value: "65", description: "Param 3"},
-                {dataType: "S", position: 4, origValue: "45", value: "45", description: "Param 4"},
-                {dataType: "S", position: 5, origValue: "55", value: "25", description: "Param 5"},
-                {dataType: "S", position: 6, origValue: "65", value: "65", description: "Param 6"},
-                {dataType: "S", position: 7, origValue: "45", value: "45", description: "Param 7"},
-                {dataType: "S", position: 8, origValue: "55", value: "25", description: "Param 8"},
-                {dataType: "S", position: 9, origValue: "65", value: "65", description: "Param 9"},
-                {dataType: "S", position:10, origValue: "65", value: "65", description: "Param 10"},
-                {dataType: "S", position:11, origValue: "45", value: "45", description: "Param 11"},
-                {dataType: "S", position:12, origValue: "55", value: "25", description: "Param 12"},
-                {dataType: "S", position:13, origValue: "65", value: "65", description: "Param 13"},
-                {dataType: "S", position:14, origValue: "45", value: "45", description: "Param 14"},
-                {dataType: "S", position:15, origValue: "55", value: "25", description: "Param 15"},
-                {dataType: "S", position:16, origValue: "65", value: "65", description: "Param 16"},
-                {dataType: "S", position:17, origValue: "45", value: "45", description: "Param 17"},
-                {dataType: "S", position:18, origValue: "55", value: "25", description: "Param 18"},
-                {dataType: "S", position:19, origValue: "65", value: "65", description: "Param 19"},
-                {dataType: "S", position:20, origValue: "65", value: "65", description: "Param 20"},
-                {dataType: "S", position:21, origValue: "45", value: "45", description: "Param 21"},
-                {dataType: "S", position:22, origValue: "55", value: "25", description: "Param 22"},
-                {dataType: "S", position:23, origValue: "65", value: "65", description: "Param 23"},
-                {dataType: "S", position:24, origValue: "45", value: "45", description: "Param 24"},
-                {dataType: "S", position:25, origValue: "55", value: "25", description: "Param 25"},
-                {dataType: "S", position:26, origValue: "65", value: "65", description: "Param 26"},
-                {dataType: "S", position:27, origValue: "45", value: "45", description: "Param 27"},
-                {dataType: "S", position:28, origValue: "55", value: "25", description: "Param 28"},
-                {dataType: "S", position:29, origValue: "65", value: "65", description: "Param 29"},
-                {dataType: "S", position:30, origValue: "65", value: "65", description: "Param 30"}
+                {dataType: "S", position: 1, origValue: "45", value: "45", modified: ko.observable(false), description: "A very long parameter description for Param 1"},
+                {dataType: "S", position: 2, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 2"},
+                {dataType: "S", position: 3, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 3"},
+                {dataType: "S", position: 4, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 4"},
+                {dataType: "S", position: 5, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 5"},
+                {dataType: "S", position: 6, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 6"},
+                {dataType: "S", position: 7, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 7"},
+                {dataType: "S", position: 8, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 8"},
+                {dataType: "S", position: 9, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 9"},
+                {dataType: "S", position:10, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 10"},
+                {dataType: "S", position:11, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 11"},
+                {dataType: "S", position:12, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 12"},
+                {dataType: "S", position:13, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 13"},
+                {dataType: "S", position:14, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 14"},
+                {dataType: "S", position:15, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 15"},
+                {dataType: "S", position:16, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 16"},
+                {dataType: "S", position:17, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 17"},
+                {dataType: "S", position:18, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 18"},
+                {dataType: "S", position:19, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 19"},
+                {dataType: "S", position:20, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 20"},
+                {dataType: "S", position:21, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 21"},
+                {dataType: "S", position:22, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 22"},
+                {dataType: "S", position:23, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 23"},
+                {dataType: "S", position:24, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 24"},
+                {dataType: "S", position:25, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 25"},
+                {dataType: "S", position:26, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 26"},
+                {dataType: "S", position:27, origValue: "45", value: "45", modified: ko.observable(false), description: "Param 27"},
+                {dataType: "S", position:28, origValue: "55", value: "25", modified: ko.observable(false), description: "Param 28"},
+                {dataType: "S", position:29, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 29"},
+                {dataType: "S", position:30, origValue: "65", value: "65", modified: ko.observable(false), description: "Param 30"}
             ];
 
             _.each(dummyEepromData, function(e) {
+                e.modified1 = ko.observable(false);
                 self.eepromData.push(e);
             });
-
+            //console.log(self.eepromData()); // DEBUG
         };
 
         // =============== END TESTING CODE ==========================
