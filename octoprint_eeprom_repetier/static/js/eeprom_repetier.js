@@ -210,8 +210,8 @@ $(function() {
                 )
                 .done(function(response) {
                     self.showPopup("success", "Backup Complete.", "Current data backed up to " + response.name);
+                    self.listBackups();
                 });
-                self.listBackups();
             }
         };
 
@@ -239,8 +239,8 @@ $(function() {
                         });
 
                         self.showPopup("success", "Backup retrieved to current display values.", "Review the current values and load them to EEPROM if required.");
+                        self.listBackups();
                     });
-                    self.listBackups();
                 },
             });
         };
