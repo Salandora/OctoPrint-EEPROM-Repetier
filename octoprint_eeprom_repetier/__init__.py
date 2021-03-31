@@ -86,9 +86,8 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
         response_status = 201
 
         try:
-            file = open(full_path,"w")
-            file.write(json.dumps(backup_data, indent=2))
-            file.close()
+            with open(full_path,"w") as file:
+                file.write(json.dumps(backup_data, indent=2))
             self._logger.info("Created new EEPROM backup {}".format(filename))
         except Exception:
             self._logger.exception("Could not create EEPROM backup file {}".format(filename))
@@ -106,9 +105,8 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
 
         if (os.path.exists(full_path)):
             try:
-                file = open(full_path,"r")
-                data = file.read()
-                file.close()
+                with open(full_path,"r") as file:
+                    data = file.read()
                 self._logger.info("Read EEPROM backup {}".format(filename))
             except Exception:
                 self._logger.exception("Could not read {}".format(filename))
