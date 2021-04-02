@@ -12,7 +12,7 @@ $(function() {
         self.repetierRegEx = /Repetier_([^\s]*)/i;
         self.firmwareVersion = "Unknown";
 
-        self.eepromDataRegEx = /EPR:(\d+) (\d+) ([^\s]+) (.+)/;
+        self.eepromDataRegEx = / EPR:(\d) (\d+) ([^\s]+) (.+)/;
 
         self.pluginUrl = "plugin/eeprom_repetier/";
 
@@ -150,12 +150,11 @@ $(function() {
             var cmd = "M206 T" + data_type + " P" + position;
             if (data_type == 3) {
                 cmd += " X" + value;
-                self.control.sendCustomCommand({ command: cmd });
             }
             else {
                 cmd += " S" + value;
-                self.control.sendCustomCommand({ command: cmd });
             }
+            self.control.sendCustomCommand({ command: cmd });
         };
 
         self.showPopup = function(message_type, title, text) {
