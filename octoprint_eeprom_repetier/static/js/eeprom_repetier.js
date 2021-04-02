@@ -117,11 +117,19 @@ $(function() {
             _.each(eepromData, function(data) {
                 if (data.origValue != data.value) {
                     self._requestSaveDataToEeprom(data.dataType, data.position, data.value);
-                    data.origValue = data.value;
-		            changed = true;
+
+                    OctoPrint.postJson(
+                        self.pluginUrl+"log",
+                        { message: `Updated EEPROM[${data.position}]: value ${data.origValue} changed to ${data.value} for ${data.description}` }
+                    )
+                    .done(function(response) {
+                        data.origValue = data.value;
+                    });
+                    changed = true;
                 }
             });
             if (changed) {
+                self.showUnsavedValues(false);
                 self.showPopup("success", "All changed values stored to EEPROM.", "");
             }
         };
