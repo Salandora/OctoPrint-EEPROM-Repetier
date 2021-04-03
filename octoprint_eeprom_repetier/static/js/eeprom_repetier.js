@@ -123,13 +123,12 @@ $(function() {
                         { message: `Updated EEPROM[${data.position}]: value ${data.origValue} changed to ${data.value} for ${data.description}` }
                     )
                     .done(function(response) {
-                        data.origValue = data.value;
                     });
                     changed = true;
                 }
             });
             if (changed) {
-                self.showUnsavedValues(false);
+                self.loadEeprom()
                 self.showPopup("success", "All changed values stored to EEPROM.", "");
             }
         };
