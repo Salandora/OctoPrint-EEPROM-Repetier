@@ -65,7 +65,7 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
     def get_file_url(self, filename):
         return flask.url_for("index") + "plugin/eeprom_repetier/download/" + filename
 
-    ## BlueprintPlugin
+    ## BlueprintPlugin REST API
     @octoprint.plugin.BlueprintPlugin.route("/list", methods=["GET"])
     def get_list(self):
         backup_folder = self.get_backup_folder()
@@ -140,12 +140,13 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
 
     @octoprint.plugin.BlueprintPlugin.route("/log", methods=["POST"])
     def write_log(self):
-        response_status = 201
-        log_message = flask.request.json["message"]
+        data = flask.request.json
+        log_message = data["message"] if "message" in data else "empty log request"
+
         self._logger.info(log_message)
 
         response = flask.jsonify(message=log_message)
-        response.status_code = response_status
+        response.status_code = 201
         return response
 
     ## tornado hooks for static file download
