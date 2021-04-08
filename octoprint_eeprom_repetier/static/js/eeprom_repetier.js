@@ -12,7 +12,7 @@ $(function() {
         self.repetierRegEx = /Repetier_([^\s]*)/i;
         self.firmwareVersion = "Unknown";
 
-        self.eepromDataRegEx = /EPR:(\d+) (\d+) ([^\s]+) (.+)/;
+        self.eepromDataRegEx = / EPR:(\d) (\d+) ([^\s]+) (.+)/;
 
         self.pluginUrl = "plugin/eeprom_repetier/";
 
@@ -117,11 +117,18 @@ $(function() {
             _.each(eepromData, function(data) {
                 if (data.origValue != data.value) {
                     self._requestSaveDataToEeprom(data.dataType, data.position, data.value);
-                    data.origValue = data.value;
-		            changed = true;
+
+                    OctoPrint.postJson(
+                        self.pluginUrl+"log",
+                        { message: `Updated EEPROM[${data.position}]: value ${data.origValue} changed to ${data.value} for ${data.description}` }
+                    )
+                    .done(function(response) {
+                    });
+                    changed = true;
                 }
             });
             if (changed) {
+                self.loadEeprom()
                 self.showPopup("success", "All changed values stored to EEPROM.", "");
             }
         };
@@ -150,12 +157,11 @@ $(function() {
             var cmd = "M206 T" + data_type + " P" + position;
             if (data_type == 3) {
                 cmd += " X" + value;
-                self.control.sendCustomCommand({ command: cmd });
             }
             else {
                 cmd += " S" + value;
-                self.control.sendCustomCommand({ command: cmd });
             }
+            self.control.sendCustomCommand({ command: cmd });
         };
 
         self.showPopup = function(message_type, title, text) {

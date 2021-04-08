@@ -65,7 +65,7 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
     def get_file_url(self, filename):
         return flask.url_for("index") + "plugin/eeprom_repetier/download/" + filename
 
-    ## BlueprintPlugin
+    ## BlueprintPlugin REST API
     @octoprint.plugin.BlueprintPlugin.route("/list", methods=["GET"])
     def get_list(self):
         backup_folder = self.get_backup_folder()
@@ -86,9 +86,8 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
         response_status = 201
 
         try:
-            file = open(full_path,"w")
-            file.write(json.dumps(backup_data, indent=2))
-            file.close()
+            with open(full_path,"w") as file:
+                file.write(json.dumps(backup_data, indent=2))
             self._logger.info("Created new EEPROM backup {}".format(filename))
         except Exception:
             self._logger.exception("Could not create EEPROM backup file {}".format(filename))
@@ -106,14 +105,12 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
 
         if (os.path.exists(full_path)):
             try:
-                file = open(full_path,"r")
-                data = file.read()
-                file.close()
+                with open(full_path,"r") as file:
+                    data = file.read()
                 self._logger.info("Read EEPROM backup {}".format(filename))
             except Exception:
                 self._logger.exception("Could not read {}".format(filename))
                 response_status = 404
-                #raise
         else:
             self._logger.warning("Requested backup file {} not found.".format(filename))
             response_status = 204
@@ -124,7 +121,6 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
 
     @octoprint.plugin.BlueprintPlugin.route("/backup/<filename>", methods=["DELETE"])
     def delete_backup(self, filename):
-        backup_folder = self.get_backup_folder()
         full_path = self.get_full_path(filename)
         response_status = 200
 
@@ -135,12 +131,22 @@ class Eeprom_repetierPlugin(octoprint.plugin.AssetPlugin,
             except Exception:
                 self._logger.exception("Could not delete {}".format(filename))
                 response_status = 404
-                #raise
         else:
             self._logger.warning("Backup file {} not found.".format(filename))
 
         response = flask.jsonify(name=filename, data=[])
         response.status_code = response_status
+        return response
+
+    @octoprint.plugin.BlueprintPlugin.route("/log", methods=["POST"])
+    def write_log(self):
+        data = flask.request.json
+        log_message = data["message"] if "message" in data else "empty log request"
+
+        self._logger.info(log_message)
+
+        response = flask.jsonify(message=log_message)
+        response.status_code = 201
         return response
 
     ## tornado hooks for static file download
